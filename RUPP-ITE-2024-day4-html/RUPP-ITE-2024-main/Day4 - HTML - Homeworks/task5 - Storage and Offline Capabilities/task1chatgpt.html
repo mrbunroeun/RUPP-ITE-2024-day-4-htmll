@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Location with Geolocation API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #mapLink {
+            display: none;
+            margin-top: 10px;
+        }
+        #locationOutput {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Find Your Current Location</h2>
+    <button onclick="getLocation()">Show My Location</button>
+
+    <div id="locationOutput"></div>
+    <a id="mapLink" href="" target="_blank">Open in Google Maps</a>
+
+    <script>
+        const locationOutput = document.getElementById('locationOutput');
+        const mapLink = document.getElementById('mapLink');
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                locationOutput.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            locationOutput.innerHTML = `Latitude: ${latitude}<br>Longitude: ${longitude}`;
+            
+            // Create a Google Maps link to show the location
+            mapLink.href = `https://www.google.com/maps?q=${latitude},${longitude}`;
+            mapLink.style.display = 'inline';
+            mapLink.textContent = 'Open in Google Maps';
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    locationOutput.innerHTML = "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    locationOutput.innerHTML = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    locationOutput.innerHTML = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    locationOutput.innerHTML = "An unknown error occurred.";
+                    break;
+            }
+        }
+    </script>
+
+</body>
+</html>
